@@ -45,12 +45,8 @@ public class JwtHelper {
         return token;
     }
 
-    public DecodedJWT verifyToken(HttpServletRequest request){
-    	//判断是否为ajax请求，默认不是  
-        boolean isAjaxRequest = false;  
-        if(request.getHeader("x-requested-with")!=null && request.getHeader("x-requested-with").equals("XMLHttpRequest")){  
-            isAjaxRequest = true;  
-        }
+    public DecodedJWT verifyToken(HttpServletRequest request, boolean isAjaxRequest){
+    	
         String token ="";
         if (isAjaxRequest) {
         	token = request.getHeader(HEADER_STRING);
