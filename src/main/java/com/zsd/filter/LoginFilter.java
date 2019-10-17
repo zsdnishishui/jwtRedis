@@ -61,14 +61,14 @@ public class LoginFilter implements Filter {
 		}else{
 			for (String url : urls) {
 	            if (pathMatcher.match(url, uri)) {
-	            	//判断是否为ajax请求，默认不是  
-	                boolean isAjaxRequest = false;  
-	                if(request.getHeader("x-requested-with")!=null && request.getHeader("x-requested-with").equals("XMLHttpRequest")){  
+	            	boolean isAjaxRequest =false;
+	            	if(request.getHeader("isAjax")!=null && request.getHeader("isAjax").equals("yes")){  
 	                    isAjaxRequest = true;  
 	                }
 	            	DecodedJWT decodedJWT = jwtHelper.verifyToken(request,isAjaxRequest);
 	                if (decodedJWT != null) {
 	                	if(decodedJWT.getExpiresAt().getTime()<System.currentTimeMillis()){
+	                		
 	                		//过期了
 	                		if (isAjaxRequest) {
 	                			long cha = System.currentTimeMillis()-decodedJWT.getExpiresAt().getTime();
@@ -107,9 +107,9 @@ public class LoginFilter implements Filter {
 	                	
 	                    
 	                }else{
+	                	//是一个非法token
 	                	if (isAjaxRequest) {
-	                		//是一个非法token
-		                	String restr = "{\"code\":202,\"message\":\"no pass\",\"data\":\"\"}";
+	                		String restr = "{\"code\":202,\"message\":\"no pass\",\"data\":\"\"}";
 							response.getWriter().print(restr);
 						}else{
 							response.sendRedirect("http://127.0.0.1:8090/corsWeb/index.html");

@@ -46,7 +46,6 @@ public class JwtHelper {
     }
 
     public DecodedJWT verifyToken(HttpServletRequest request, boolean isAjaxRequest){
-    	
         String token ="";
         if (isAjaxRequest) {
         	token = request.getHeader(HEADER_STRING);
