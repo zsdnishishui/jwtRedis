@@ -41,5 +41,8 @@ public class LoginController {
 		map.put("res", "success");
 		return map;
 	}
-	
+	@RequestMapping("/go")
+	public void go(){
+		System.out.println("+++++++++++++go");
+	}
 }

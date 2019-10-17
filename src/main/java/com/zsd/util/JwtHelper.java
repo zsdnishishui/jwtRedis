@@ -24,7 +24,7 @@ public class JwtHelper {
     private String SECRET;
     private final String TOKEN_PREFIX = "Bearer";
     private final String HEADER_STRING = "Authorization";
-
+    private final String TOKEN_PARAMETER = "token";
     public JwtHelper(String secret, long expire) {
         this.EXPIRATION_TIME = expire;
         this.SECRET = secret;
@@ -46,7 +46,17 @@ public class JwtHelper {
     }
 
     public DecodedJWT verifyToken(HttpServletRequest request){
-    	String token = request.getHeader(HEADER_STRING);
+    	//判断是否为ajax请求，默认不是  
+        boolean isAjaxRequest = false;  
+        if(request.getHeader("x-requested-with")!=null && request.getHeader("x-requested-with").equals("XMLHttpRequest")){  
+            isAjaxRequest = true;  
+        }
+        String token ="";
+        if (isAjaxRequest) {
+        	token = request.getHeader(HEADER_STRING);
+		}else{
+			token = request.getParameter(TOKEN_PARAMETER);
+		}
     	Algorithm algorithm = Algorithm.HMAC256(SECRET);
         
         
@@ -57,7 +67,7 @@ public class JwtHelper {
 			// TODO: handle exception
 			return null;
 		}
-        
+        //加密部分是不是相等
         byte[] signatureBytes = algorithm.sign(jwt.getHeader().getBytes(StandardCharsets.UTF_8), jwt.getPayload().getBytes(StandardCharsets.UTF_8));
         String signature = Base64.encodeBase64URLSafeString((signatureBytes));
         if (signature.equals(jwt.getSignature())) {

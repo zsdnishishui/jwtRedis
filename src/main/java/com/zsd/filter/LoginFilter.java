@@ -52,6 +52,8 @@ public class LoginFilter implements Filter {
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
+		 
+		System.out.println("+++++++++++++++"+request.getRequestURI());
 		String uri = request.getRequestURI();
 		//"OPTIONS" 是为了放过检测跨域的请求
 		if ("/login".equals(uri)||"OPTIONS".equals(request.getMethod())) {
