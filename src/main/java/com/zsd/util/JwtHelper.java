@@ -40,6 +40,7 @@ public class JwtHelper {
         String token = JWT.create()
                 .withSubject("userInfo")
                 .withClaim("username", claims.get("username").toString())
+                .withClaim("role", claims.get("role").toString())
                 .withExpiresAt(d)
                 .sign(al);
         return token;

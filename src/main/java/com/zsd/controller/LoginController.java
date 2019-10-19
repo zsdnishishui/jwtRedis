@@ -22,9 +22,12 @@ public class LoginController {
 		Map<String, Object> claims = new HashMap<String, Object>();
 		if ("001".equals(username)||"002".equals(username)) {
 			claims.put("username", username);
+			if ("001".equals(username)) {
+				claims.put("role", "admin");
+			}else{
+				claims.put("role", "noAdmin");
+			}
 			String token=jwtHelper.generateToken(claims);
-			
-			
 			map.put("key", token);
 			map.put("res", "success");
 		}else{

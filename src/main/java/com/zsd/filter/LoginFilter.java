@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.AntPathMatcher;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.zsd.setting.RoleSetting;
 import com.zsd.util.JwtHelper;
 import com.zsd.util.RedisUtil;
 
@@ -52,8 +53,6 @@ public class LoginFilter implements Filter {
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
-		 
-		System.out.println("+++++++++++++++"+request.getRequestURI());
 		String uri = request.getRequestURI();
 		//"OPTIONS" 是为了放过检测跨域的请求
 		if ("/login".equals(uri)||"OPTIONS".equals(request.getMethod())) {
@@ -83,7 +82,14 @@ public class LoginFilter implements Filter {
 									//此处加同步锁是为了当第二个请求来的时候，确定第一个请求已经把旧的token放进redis了
 									synchronized (this) {
 										if (redisUtil.hasKey(token)) {
-											chain.doFilter(request, response);
+											//如果有权限就放行
+											String role = decodedJWT.getClaim("role").asString();
+					                		if(RoleSetting.ROLE_AUTH.get(role).contains(uri)){
+					                			chain.doFilter(request, response);
+					                		}else{
+					                			String restr = "{\"code\":203,\"message\":\"no auth\",\"data\":\"\"}";
+												response.getWriter().print(restr);
+					                		}
 										}else{
 											String userName = decodedJWT.getClaim("username").asString();
 											//设置30秒的存活期
@@ -102,7 +108,15 @@ public class LoginFilter implements Filter {
 							}
 	                		
 	                	}else{
-	                		chain.doFilter(request, response);
+	                		//如果有权限就放行
+	                		String role = decodedJWT.getClaim("role").asString();
+	                		if(RoleSetting.ROLE_AUTH.get(role).contains(uri)){
+	                			chain.doFilter(request, response);
+	                		}else{
+	                			String restr = "{\"code\":203,\"message\":\"no auth\",\"data\":\"\"}";
+								response.getWriter().print(restr);
+	                		}
+	                		
 	                	}
 	                	
 	                    
