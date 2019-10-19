@@ -96,6 +96,7 @@ public class LoginFilter implements Filter {
 											redisUtil.set(token,userName,30);
 											Map<String, Object> claims = new HashMap<String, Object>();
 											claims.put("username", userName);
+											claims.put("role", decodedJWT.getClaim("role").asString());
 											token = jwtHelper.generateToken(claims);
 											String restr = "{\"code\":201,\"message\":\"new token\",\"data\":\""+token+"\"}";
 											response.getWriter().print(restr);
