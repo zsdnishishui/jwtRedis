@@ -77,31 +77,8 @@ public class LoginFilter implements Filter {
 		                			String restr = "{\"code\":200,\"message\":\"new login\",\"data\":\"\"}";
 									response.getWriter().print(restr);
 								}else{
-									String token = decodedJWT.getToken();
-									//当第二个请求来的时候，我们可以去redis查询下是否存在这么个旧token，存在的话放行。
-									//此处加同步锁是为了当第二个请求来的时候，确定第一个请求已经把旧的token放进redis了
-									synchronized (this) {
-										if (redisUtil.hasKey(token)) {
-											//如果有权限就放行
-											String role = decodedJWT.getClaim("role").asString();
-					                		if(RoleSetting.ROLE_AUTH.get(role).contains(uri)){
-					                			chain.doFilter(request, response);
-					                		}else{
-					                			String restr = "{\"code\":203,\"message\":\"no auth\",\"data\":\"\"}";
-												response.getWriter().print(restr);
-					                		}
-										}else{
-											String userName = decodedJWT.getClaim("username").asString();
-											//设置30秒的存活期
-											redisUtil.set(token,userName,30);
-											Map<String, Object> claims = new HashMap<String, Object>();
-											claims.put("username", userName);
-											claims.put("role", decodedJWT.getClaim("role").asString());
-											token = jwtHelper.generateToken(claims);
-											String restr = "{\"code\":201,\"message\":\"new token\",\"data\":\""+token+"\"}";
-											response.getWriter().print(restr);
-										}
-									}
+									String restr = "{\"code\":201,\"message\":\"pass\"}";
+									response.getWriter().print(restr);
 									
 								}
 							}else{
