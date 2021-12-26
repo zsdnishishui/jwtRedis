@@ -6,3 +6,5 @@
 (3)在token放行之前查看是否有权限
 
 ![image](https://github.com/zsdnishishui/uploadImg/blob/master/token流程图.png)
+
+(4)参考了[过期刷新token](https://segmentfault.com/a/1190000016946316)

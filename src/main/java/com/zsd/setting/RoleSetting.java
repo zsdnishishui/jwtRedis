@@ -9,7 +9,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class RoleSetting implements ApplicationRunner{
 	public static Map<String, List<String>> ROLE_AUTH;
 	@Override

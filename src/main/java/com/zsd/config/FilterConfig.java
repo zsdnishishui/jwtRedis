@@ -21,7 +21,7 @@ public class FilterConfig {
     @Value("${jwt.expire}")
     private long expire;
 
-    @Value("${jwt.authorised-urls}")
+    @Value("${jwt.except.authorised-urls}")
     private String[] authorisedUrls;
 
     @Bean
