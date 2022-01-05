@@ -24,24 +24,72 @@ spring:
     props:
       sql-show: true
     datasource:
-      names: ds0,ds1
+      names: ds0,ds1,ds2,ds3
 #      common:
 #        type: com.alibaba.druid.pool.DruidDataSource
       ds0:
         type: com.zaxxer.hikari.HikariDataSource
-        jdbc-url: jdbc:mysql://192.168.1.11:3308/test?characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+        jdbc-url: jdbc:mysql://192.168.1.11:3308/test0?characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
         username: root
         password: 123
         driver-class-name: com.mysql.cj.jdbc.Driver
       ds1:
         type: com.zaxxer.hikari.HikariDataSource
-        jdbc-url: jdbc:mysql://192.168.1.11:3307/test?characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+        jdbc-url: jdbc:mysql://192.168.1.11:3307/test0?characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+        username: root
+        password: 123
+        driver-class-name: com.mysql.cj.jdbc.Driver
+      ds2:
+        type: com.zaxxer.hikari.HikariDataSource
+        jdbc-url: jdbc:mysql://192.168.1.11:3308/test1?characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+        username: root
+        password: 123
+        driver-class-name: com.mysql.cj.jdbc.Driver
+      ds3:
+        type: com.zaxxer.hikari.HikariDataSource
+        jdbc-url: jdbc:mysql://192.168.1.11:3307/test1?characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
         username: root
         password: 123
         driver-class-name: com.mysql.cj.jdbc.Driver
     rules:
-      readwrite-splitting:
+      sharding:
+        tables:
+          user:
+            actual-data-nodes: prds_$->{0..1}.user$->{0..1}
+            table-strategy:
+              standard:
+                sharding-column: id
+                sharding-algorithm-name: user-inline
+        default-database-strategy:
+          standard:
+            sharding-column: age
+            sharding-algorithm-name: default-database-strategy-inline
+        sharding-algorithms:
+          user-inline:
+            type: INLINE
+            props:
+              algorithm-expression: user$->{id % 2}
+          default-database-strategy-inline:
+            type: INLINE
+            props:
+              algorithm-expression: prds_$->{age % 2}
 
+
+      readwrite-splitting:
+        data-sources:
+          # 这个名字就随便起
+          prds_0:
+            # 主库
+            write-data-source-name: ds0
+            # 从库
+            read-data-source-names: ds1
+            load-balancer-name: round_robin
+          prds_1:
+            # 主库
+            write-data-source-name: ds2
+            # 从库
+            read-data-source-names: ds3
+            load-balancer-name: round_robin
         load-balancers:
           # 负载均衡算法
           round_robin:
@@ -50,14 +98,6 @@ spring:
             props:
               # 你也可以配置 xxx: 123, yyy: 4342 但是必须得有一个属性, 随便编
               default: 0
-        data-sources:
-          # 这个名字就随便起
-          prds:
-            # 主库
-            write-data-source-name: ds0
-            # 从库
-            read-data-source-names: ds1
-            load-balancer-name: round_robin
 mybatis:
   #mapper配置文件
   mapper-locations: classpath:mapper/*.xml

@@ -25,10 +25,16 @@ public class UserController {
 
     @GetMapping("save")
     public void save(){
-        User user = new User();
-        user.setId(1000L);
-        user.setUsername("121212000");
-        userMapper.save(user);
+        User user1 = new User();
+        user1.setId(1L);
+        user1.setAge(3);
+        user1.setUsername("111");
+        User user2 = new User();
+        user2.setId(2L);
+        user2.setAge(4);
+        user2.setUsername("2222");
+        userMapper.save(user1);
+        userMapper.save(user2);
     }
 
     @GetMapping("getAll")
