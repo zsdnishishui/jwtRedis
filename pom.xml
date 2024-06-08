@@ -5,7 +5,6 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>jwt-auth</module>
-		<module>jwt-client</module>
 		<module>business</module>
 		<module>sharding</module>
 	</modules>

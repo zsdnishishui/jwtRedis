@@ -6,9 +6,14 @@
     <select id="findAll" resultType="com.zsd.entity.User">
         select * from user;
     </select>
+    <select id="selectByUsername" resultType="com.zsd.entity.User">
+        select * from user where user_name = #{username}
+    </select>
+    <select id="selectAuthList" resultType="java.lang.String">
+        select auth from user_auth where user_name = #{username}
+    </select>
     <insert id="save" parameterType="com.zsd.entity.User">
         insert into user (id,username,age) values (#{id},#{username},#{age});
-<!--        insert into user (id,username) values (#{id},#{username});-->
     </insert>
 <!--    <update id="updateUserById" parameterType="org.sang.mybatis.model.User">-->
 <!--        update user set username=#{username},address=#{address} where id=#{id}-->

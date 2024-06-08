@@ -11,6 +11,9 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
+/**
+ * 这个是给sharding 分库分表用的
+ */
 @RestController
 public class UserController {
 

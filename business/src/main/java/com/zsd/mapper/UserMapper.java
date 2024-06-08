@@ -10,4 +10,8 @@ public interface UserMapper {
     List<User> findAll();
 
     void save(User user);
+
+    User selectByUsername(String username);
+
+    List<String> selectAuthList(String username);
 }
