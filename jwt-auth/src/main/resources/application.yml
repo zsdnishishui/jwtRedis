@@ -1,0 +1,25 @@
+server:
+  port: 8080
+jwt:
+  secret: zhou
+  expire: 3000
+  except:
+    authorised-urls: /login,/renewal
+spring:
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+  datasource:
+    username: root
+    password: 123
+    url: jdbc:mysql://192.168.56.110:3306/test
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  #mapper配置文件
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.zsd.entity
+  #开启驼峰命名
+  configuration:
+    map-underscore-to-camel-case: true
