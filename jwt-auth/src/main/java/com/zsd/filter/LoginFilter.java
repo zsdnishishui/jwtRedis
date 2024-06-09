@@ -44,7 +44,7 @@ public class LoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         String uri = request.getRequestURI();
-        //"OPTIONS" 是为了放过检测跨域的请求
+        // 不校验的路径
         if (urls.contains(uri)) {
             chain.doFilter(req, res); // 调用下一过滤器
         } else {
@@ -54,7 +54,7 @@ public class LoginFilter implements Filter {
             } else {
                 //是一个非法token或过期了
                 response.setContentType("text/html;charset=utf-8");
-                response.getWriter().print("{\"code\":-1,\"msg\":\"token不合法或已过期\",\"data\":\"\"}");
+                response.getWriter().print("{\"code\":-1,\"message\":\"token不合法或已过期\",\"data\":\"\"}");
             }
 
         }

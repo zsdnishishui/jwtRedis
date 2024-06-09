@@ -6,6 +6,7 @@ import com.zsd.entity.User;
 import com.zsd.service.UserService;
 import com.zsd.util.JwtHelper;
 import com.zsd.util.RedisUtil;
+import com.zsd.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,13 +36,12 @@ public class LoginController {
      * @return
      */
     @RequestMapping("/login")
-    public Map<String, Object> login(HttpServletRequest request, @RequestBody Map<String, Object> resmap) {
+    public Result login(HttpServletRequest request, @RequestBody Map<String, Object> resmap) {
         String username = resmap.get("username").toString();
-        Map<String, Object> map = new HashMap<String, Object>();
         Map<String, Object> claims = new HashMap<String, Object>();
         User user = userService.selectByUsername(username);
         if (user == null) {
-            map.put("msg", "用户名或密码错误");
+            return Result.fail("用户名或密码错误");
         } else {
             // 查询有哪些权限
             List<String> authList = userService.selectAuthList(username);
@@ -50,11 +50,8 @@ public class LoginController {
             redisUtil.set("username:" + username, JSON.toJSONString(user));
             claims.put("username", username);
             String token = jwtHelper.generateToken(claims);
-            map.put("data", token);
-            map.put("msg", "success");
-            map.put("code", 0);
+            return Result.success("登录成功", token);
         }
-        return map;
     }
 
     /**
@@ -64,11 +61,7 @@ public class LoginController {
      */
     @PreAuth("121")
     @RequestMapping("/getDate")
-    public Map<String, Object> getDate() {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("data", "getDate");
-        map.put("msg", "success");
-        map.put("code", 0);
-        return map;
+    public Result getDate() {
+        return Result.success();
     }
 }
