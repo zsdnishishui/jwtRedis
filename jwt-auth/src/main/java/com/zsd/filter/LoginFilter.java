@@ -53,7 +53,7 @@ public class LoginFilter implements Filter {
 			}else{
 				//是一个非法token或过期了
 				response.setContentType("text/html;charset=utf-8");
-				response.getWriter().print("{\"code\":401,\"message\":\"token不合法或已过期\",\"data\":\"\"}");
+				response.getWriter().print("{\"code\":-1,\"msg\":\"token不合法或已过期\",\"data\":\"\"}");
 			}
 			
 		}

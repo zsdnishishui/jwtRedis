@@ -36,7 +36,7 @@ public class LoginController {
 		Map<String, Object> claims = new HashMap<String, Object>();
 		User user = userService.selectByUsername(username);
 		if (user == null){
-			map.put("res", "用户名或密码错误");
+			map.put("msg", "用户名或密码错误");
 		} else{
 			// 查询有哪些权限
 			List<String> authList = userService.selectAuthList(username);
@@ -45,18 +45,20 @@ public class LoginController {
 			redisUtil.set("username:"+username, JSON.toJSONString(user));
 			claims.put("username", username);
 			String token=jwtHelper.generateToken(claims);
-			map.put("token", token);
-			map.put("res", "success");
+			map.put("data", token);
+			map.put("msg", "success");
+			map.put("code", 0);
 		}
 		return map;
 	}
 
 	@PreAuth("121")
 	@RequestMapping("/getDate")
-	public Map<String,String> getDate(){
-		Map<String,String> map = new HashMap<String,String>();
+	public Map<String,Object> getDate(){
+		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("data", "getDate");
-		map.put("res", "success");
+		map.put("msg", "success");
+		map.put("code", 0);
 		return map;
 	}
 }
