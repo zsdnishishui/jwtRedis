@@ -11,6 +11,9 @@ import org.springframework.context.annotation.Configuration;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 自定义bean的注入
+ */
 @Configuration
 public class FilterConfig {
     @Value("${jwt.secret}")
@@ -26,14 +29,16 @@ public class FilterConfig {
     public JwtHelper jwtHelperBean() {
         return new JwtHelper(secret, expire);
     }
+
     @Bean
     public RedisUtil redisUtilBean() {
         return new RedisUtil();
     }
+
     @Bean
     public FilterRegistrationBean basicFilterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        LoginFilter filter = new LoginFilter(jwtHelperBean(), authorisedUrls,redisUtilBean());
+        LoginFilter filter = new LoginFilter(jwtHelperBean(), authorisedUrls, redisUtilBean());
         registrationBean.setFilter(filter);
         registrationBean.setName("loginFilter");
         List<String> urlPatterns = new ArrayList<String>();
@@ -42,5 +47,5 @@ public class FilterConfig {
         registrationBean.setOrder(Integer.MAX_VALUE);
         return registrationBean;
     }
-    
+
 }

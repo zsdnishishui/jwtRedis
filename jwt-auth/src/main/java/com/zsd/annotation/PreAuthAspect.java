@@ -9,11 +9,9 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.CodeSignature;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -22,6 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.List;
 
+/**
+ * 权限注解的实现
+ */
 @Aspect
 @Component
 public class PreAuthAspect {
@@ -33,11 +34,12 @@ public class PreAuthAspect {
     private JwtHelper jwtHelper;
 
     @Pointcut("@annotation(PreAuth)")
-    public void preAuthPointCut() {}
+    public void preAuthPointCut() {
+    }
 
 
     @Before("preAuthPointCut()")
-    public void  beforeAuth(JoinPoint joinPoint) throws AuthException {
+    public void beforeAuth(JoinPoint joinPoint) throws AuthException {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         //获取切入点所在的方法
@@ -48,15 +50,15 @@ public class PreAuthAspect {
         if (StringUtils.isEmpty(username)) {
             throw new AuthException("token不合法");
         } else {
-            Object userObject = redisUtil.get("username:"+ username);
-            if (userObject != null){
-                User user = JSON.parseObject(userObject.toString(),User.class);
+            Object userObject = redisUtil.get("username:" + username);
+            if (userObject != null) {
+                User user = JSON.parseObject(userObject.toString(), User.class);
                 List<String> authList = user.getAuthList();
                 String auth = preAuth.value();
                 if (!authList.contains(auth)) {
                     throw new AuthException("无此权限");
                 }
-            } else{
+            } else {
                 throw new AuthException("没有此用户的信息");
             }
         }

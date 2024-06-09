@@ -4,7 +4,7 @@ jwt:
   secret: zhou
   expire: 3000
   except:
-    authorised-urls: /login,/renewal
+    authorised-urls: /login
 spring:
   redis:
     database: 0
