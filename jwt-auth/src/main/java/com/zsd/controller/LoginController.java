@@ -2,6 +2,7 @@ package com.zsd.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.zsd.annotation.PreAuth;
 import com.zsd.entity.User;
 import com.zsd.service.UserService;
 import com.zsd.util.JwtHelper;
@@ -49,6 +50,8 @@ public class LoginController {
 		}
 		return map;
 	}
+
+	@PreAuth("121")
 	@RequestMapping("/getDate")
 	public Map<String,String> getDate(){
 		Map<String,String> map = new HashMap<String,String>();
