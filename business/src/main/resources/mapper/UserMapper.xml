@@ -3,22 +3,19 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zsd.mapper.UserMapper">
-    <select id="findAll" resultType="com.zsd.entity.User">
-        select * from user;
-    </select>
+
     <select id="selectByUsername" resultType="com.zsd.entity.User">
-        select * from user where user_name = #{username}
+        select * from t_user where user_name = #{username}
     </select>
     <select id="selectAuthList" resultType="java.lang.String">
-        select auth from user_auth where user_name = #{username}
+        select auth from t_user_auth where user_name = #{username}
     </select>
+
+    <!--    user 表做了分库分表-->
     <insert id="save" parameterType="com.zsd.entity.User">
         insert into user (id,username,age) values (#{id},#{username},#{age});
     </insert>
-<!--    <update id="updateUserById" parameterType="org.sang.mybatis.model.User">-->
-<!--        update user set username=#{username},address=#{address} where id=#{id}-->
-<!--    </update>-->
-<!--    <delete id="deleteUserById">-->
-<!--        delete from user where id=#{id}-->
-<!--    </delete>-->
+    <select id="findAll" resultType="com.zsd.entity.User">
+        select * from user;
+    </select>
 </mapper>
